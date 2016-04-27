@@ -1,31 +1,23 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
-
-var app = express();
-app.use(bodyParser.json());
+var mongoose = require('mongoose');
+var Sighting = require('./Sighting');
+var SightingCtrl = require('./sightingCtrl');
 
 var port = 3000;
+var app = express();
+app.use(bodyParser.json());
+app.use(cors());
+mongoose.set("debug", true);
+mongoose.connect('mongodb://localhost/birds-mongoose');
 
-app.post('/api/sighting', function(req, res) {
-  console.log('POST sighting');
-  res.end();
-});
- 
-app.get('/api/sighting', function(req, res) {
-  console.log('GET sighting');
-  res.end();
-});
- 
-app.delete('/api/sighting', function(req, res) {
-  console.log('DELETE sighting');
-  res.end();
-});
- 
-app.put('/api/sighting', function(req, res) {
-  console.log('PUT sighting');
-  res.end();
-});
+
+
+app.post('/sighting', SightingCtrl.create);
+app.get('/sighting', SightingCtrl.read);
+app.put('/sighting/:id', SightingCtrl.update);
+app.delete('/sighting/:id', SightingCtrl.delete);
 
 app.listen(port, function() {
   console.log("Started server on port", port);
